@@ -2,10 +2,8 @@ package gosxnotifier
 
 import (
 	"errors"
-	"net/url"
 	"os/exec"
 	"path/filepath"
-	"strings"
 )
 
 type Sound string
@@ -33,7 +31,8 @@ type Notification struct {
 	Title        string //optional
 	Subtitle     string //optional
 	Sound        Sound  //optional
-	Link         string //optional
+	Open         string //optional
+	Activate     string //optional
 	Sender       string //optional
 	Group        string //optional
 	AppIcon      string //optional
@@ -97,22 +96,16 @@ func (n *Notification) Push() error {
 			commandTuples = append(commandTuples, []string{"-contentImage", img}...)
 		}
 
-		//add url if specified
-		url, err := url.Parse(n.Link)
-		if err != nil {
-			n.Link = ""
-		}
-		if url != nil && n.Link != "" {
-			commandTuples = append(commandTuples, []string{"-open", n.Link}...)
+		if n.Open != "" {
+			commandTuples = append(commandTuples, []string{"-open", n.Open}...)
 		}
 
-		//add bundle id if specified
-		if strings.HasPrefix(strings.ToLower(n.Link), "com.") {
-			commandTuples = append(commandTuples, []string{"-activate", n.Link}...)
+		if n.Activate != "" {
+			commandTuples = append(commandTuples, []string{"-activate", n.Activate}...)
 		}
 
 		//add sender if specified
-		if strings.HasPrefix(strings.ToLower(n.Sender), "com.") {
+		if n.Sender != "" {
 			commandTuples = append(commandTuples, []string{"-sender", n.Sender}...)
 		}
 
@@ -120,7 +113,7 @@ func (n *Notification) Push() error {
 			return errors.New("Please provide a Message and Type at a minimum.")
 		}
 
-		_, err = exec.Command(FinalPath, commandTuples...).Output()
+		_, err := exec.Command(FinalPath, commandTuples...).Output()
 		if err != nil {
 			return err
 		}
