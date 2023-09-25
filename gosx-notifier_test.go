@@ -159,21 +159,21 @@ func Test_Sound(t *testing.T) {
 }
 
 func Test_Link_Url(t *testing.T) {
-	n := NewNotification("Testing Link Url")
-	n.Link = "http://www.yahoo.com"
+	n := NewNotification("Testing Open")
+	n.Open = "http://www.yahoo.com"
 	err := n.Push()
 
 	if err != nil {
-		t.Error("Test_Link failed with error: ", err)
+		t.Error("Test_Open failed with error: ", err)
 	}
 }
 
 func Test_Link_App_Bundle(t *testing.T) {
-	n := NewNotification("Testing Link Terminal")
-	n.Link = "com.apple.Safari"
+	n := NewNotification("Testing Activate")
+	n.Activate = "com.apple.Safari"
 	err := n.Push()
 
 	if err != nil {
-		t.Error("Test_Link failed with error: ", err)
+		t.Error("Test_Activate failed with error: ", err)
 	}
 }
